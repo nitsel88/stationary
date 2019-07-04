@@ -1,0 +1,5 @@
+SELECT orders.order_id as id, orders.order_date as date, orders.order_status as status, orders.userid as user, order_dtl.item_id as item, order_dtl.item_ord_qty as qty FROM orders INNER JOIN order_dtl ON orders.order_id = order_dtl.order_id WHERE orders.order_id=1;
+
+INSERT INTO `new_schema`.`orders` (`order_id`, `order_date`, `order_status`, `userid`) VALUES ( 1, CURRENT_TIMESTAMP, 1 ,'01');
+INSERT INTO `new_schema`.`order_dtl` (`order_id`, `item_id`, `item_ord_qty`) VALUES (1, 1, 2);
+
