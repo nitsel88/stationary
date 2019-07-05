@@ -3,17 +3,16 @@ const dbObj = require("./database");
 var router = express.Router()
 
 // define the item middleware
-router.get(['/', '/:ordId'], function (req, res) {
+router.get(['/:userId'], function (req, res) {
     ordId = req.params.ordId
-    console.log('during req:'+ordId);
-    dbObj.getOrders(ordId).then(results => {
+    userId = req.query.userId
+
+    dbObj.getOrdersForUser(userId).then(results => {
        res.json(JSON.parse(results));
     }).catch(err => {
-        errtxt = {errMsg: "error in getOrders"}
+        errtxt = {errMsg: "error in getOrdersForUser"}
         res.json(errtxt);
     })
 })
-
-// define the about route
 
 module.exports = router

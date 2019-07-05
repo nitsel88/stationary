@@ -1,3 +1,20 @@
+CREATE TABLE `new_schema`.`users` (
+  `user_id` VARCHAR(16) NOT NULL,
+  `user_name` VARCHAR(45) NULL,
+  `pwd` VARCHAR(45) NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE INDEX `user_name_UNIQUE` (`user_name` ASC) VISIBLE)
+COMMENT = 'users table';
+
+
+CREATE TABLE `new_schema`.`items` (
+  `item_id` INT NOT NULL,
+  `item_desc` VARCHAR(45) NULL,
+  `item_onhand_qty` INT NULL,
+  PRIMARY KEY (`item_nbr`))
+COMMENT = 'items table';
+
+
 CREATE TABLE `new_schema`.`orders` (
   `order_id` INT NOT NULL,
   `order_date` DATETIME NULL,
@@ -8,7 +25,7 @@ COMMENT = 'orders table';
 
 ALTER TABLE `new_schema`.`orders` 
 ADD INDEX `user link_idx` (`user_id` ASC) VISIBLE;
-;
+
 ALTER TABLE `new_schema`.`orders` 
 ADD CONSTRAINT `user link`
   FOREIGN KEY (`user_id`)
@@ -44,38 +61,21 @@ ADD CONSTRAINT `item link`
 
 
 
-CREATE TABLE `new_schema`.`items` (
-  `item_nbr` INT NOT NULL,
-  `item_desc` VARCHAR(45) NULL,
-  `item_onhand_qty` INT NULL,
-  PRIMARY KEY (`item_nbr`))
-COMMENT = 'items table';\
-
-ALTER TABLE `new_schema`.`items` 
-CHANGE COLUMN `item_nbr` `item_id` INT(11) NOT NULL ;
 
 
 
 
-
-CREATE TABLE `new_schema`.`users` (
-  `user_id` VARCHAR(16) NOT NULL,
-  `user_name` VARCHAR(45) NULL,
-  `pwd` VARCHAR(45) NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE INDEX `user_name_UNIQUE` (`user_name` ASC) VISIBLE)
-COMMENT = 'users table';
 
 
 
 INSERT INTO `new_schema`.`users` (`user_id`, `user_name`, `pwd`) VALUES ('01', 'nitsel', 'nitsel' );
-
 INSERT INTO `new_schema`.`items` (`item_id`, `item_desc`, `item_onhand_qty`) VALUES (1, 'pencil', 25);
 INSERT INTO `new_schema`.`items` (`item_id`, `item_desc`, `item_onhand_qty`) VALUES (2, 'pen', 10);
 INSERT INTO `new_schema`.`items` (`item_id`, `item_desc`, `item_onhand_qty`) VALUES (3, 'file', 15);
 INSERT INTO `new_schema`.`items` (`item_id`, `item_desc`, `item_onhand_qty`) VALUES (4, 'geometry box', 8);
-
 INSERT INTO `new_schema`.`orders` (`order_id`, `order_date`, `order_status`, `user_id`) VALUES ( 1, CURRENT_TIMESTAMP, 1 ,'01');
 INSERT INTO `new_schema`.`order_dtl` (`order_id`, `item_id`, `item_ord_qty`) VALUES (1, 1, 2);
+
+
 SELECT orders.order_id as id, orders.order_date as date, orders.order_status as status, orders.user_id as user, order_dtl.item_id as item, order_dtl.item_ord_qty as qty FROM orders INNER JOIN order_dtl ON orders.order_id = order_dtl.order_id WHERE orders.order_id=1;
 

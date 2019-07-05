@@ -14,6 +14,4 @@ router.get(['/', '/:itemNbr'], function (req, res) {
     })
 })
 
-// define the about route
-
 module.exports = router
