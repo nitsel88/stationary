@@ -88,21 +88,30 @@ function validateUser(authDtl) {
 }
 
 //Get the user for a matching Username and pwd
-function createOrder(orderDtl) {
+function createOrder(ord) {
  return new Promise((resolve, reject) => {
  const dbCon = getDb();
- if (authDtl.uName == undefined || authDtl.pwd == undefined) {
-     return reject("Invalid userId and password passed");
- } else {
-   query = 'SELECT user_id FROM users WHERE user_name="' + authDtl.uName + '" ' + 'and pwd="' + authDtl.pwd + '"';
- }
- console.log(query);
+ordQuery = `INSERT INTO orders (order_id, order_date, order_status, user_id)  
+SELECT MAX( order_id ) + 1 ,CURRENT_TIMESTAMP, 1 ,"` + ord.user + `" FROM orders`;
+//looping through order details
+ordDtls = ord.ordDtls;
+ordDtls.forEach(ordDtl => {
+ ordDtlQuery += ''
+})
 
- dbCon.query(query, (error, results) => {
+  console.log(ordQuery);
+  console.log(ordDtlQuery);
+
+ dbCon.query(ordQuery, (error, results) => {
+     if (error)  {
+         return reject(error);
+     }
+      dbCon.query(ordDtlQuery, (error, results) => {
      if (error)  {
          return reject(error);
      }
      return resolve(JSON.stringify(results));
+   })
   })
  })
 }
