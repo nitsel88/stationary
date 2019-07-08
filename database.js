@@ -51,12 +51,14 @@ function getOrdersForUser(userId) {
  return new Promise((resolve, reject) => {
  const dbCon = getDb();
  console.log('user id = ' + userId)
- if (orderId == undefined) {
+ if (userId == undefined) {
      return reject("Invalid userId passed");
  } else {
    query = `SELECT orders.order_id as ord_id, orders.order_date as ord_date, orders.order_status as ord_status, 
    orders.user_id as usr_id, order_dtl.item_id as itm_id, order_dtl.item_ord_qty as itm_qty 
-   FROM orders INNER JOIN order_dtl ON orders.order_id = order_dtl.order_id and order_dtl.usr_id =`+userId
+   FROM orders INNER JOIN order_dtl ON orders.order_id = order_dtl.order_id and orders.user_id =\'`+ userId + '\''
+
+   console.log(query);
  }
  dbCon.query(query, (error, results) => {
      if (error)  {
@@ -84,6 +86,19 @@ function validateUser(authDtl) {
      }
      return resolve(JSON.stringify(results));
   })
+ })
+}
+
+function getMaxOrdId() {
+   return new Promise((resolve, reject) => {
+     const dbCon = getDb(); 
+     maxQuery = 'SELECT MAX(order_id) as max_ord_id FROM orders';
+    dbCon.query(maxQuery, (error, results) => {
+     if (error)  {
+         return reject(error);
+     }
+     return resolve(JSON.stringify(results));
+    })
  })
 }
 
@@ -122,5 +137,6 @@ module.exports = {
     getItems,
     getOrdersForUser,
     validateUser,
-    createOrder
+    getMaxOrdId,
+    createOrder    
 };

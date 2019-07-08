@@ -21,3 +21,17 @@ dbObj.initDb(() => {
     });
 });
 
+process.on( 'SIGINT', function() {
+
+  const dbCon = dbObj.getDb();
+  dbCon.end(function(err) {
+      if(err) {
+        console.log('Error closing DB connection- Dont terminate')
+      }
+        console.log('DB disconnected - you can terminate if you wish')
+  });
+  console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
+
+  process.exit( );
+})
+
