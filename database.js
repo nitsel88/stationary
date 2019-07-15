@@ -55,7 +55,7 @@ function getOrdersForUser(userId) {
      return reject("Invalid userId passed");
  } else {
    query = `SELECT orders.order_id as ord_id, orders.order_date as ord_date, orders.order_status as ord_status, 
-   orders.user_id as usr_id, order_dtl.item_id as itm_id, order_dtl.item_ord_qty as itm_qty 
+   orders.order_total as ord_total, orders.user_id as usr_id, order_dtl.item_id as itm_id, order_dtl.item_ord_qty as itm_qty 
    FROM orders INNER JOIN order_dtl ON orders.order_id = order_dtl.order_id and orders.user_id =\'`+ userId + '\''
 
    console.log(query);

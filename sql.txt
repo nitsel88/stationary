@@ -11,6 +11,7 @@ CREATE TABLE `new_schema`.`items` (
   `item_id` INT NOT NULL,
   `item_desc` VARCHAR(45) NULL,
   `item_onhand_qty` INT NULL,
+  `item_price` INT NULL,
   PRIMARY KEY (`item_nbr`))
 COMMENT = 'items table';
 
@@ -33,7 +34,8 @@ ADD CONSTRAINT `user link`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
-
+ALTER TABLE `new_schema`.`orders` 
+ADD COLUMN `order_total` INT NULL DEFAULT NULL AFTER `user_id`;
 
 
 CREATE TABLE `new_schema`.`order_dtl` (
@@ -73,6 +75,11 @@ INSERT INTO `new_schema`.`items` (`item_id`, `item_desc`, `item_onhand_qty`) VAL
 INSERT INTO `new_schema`.`items` (`item_id`, `item_desc`, `item_onhand_qty`) VALUES (2, 'pen', 10);
 INSERT INTO `new_schema`.`items` (`item_id`, `item_desc`, `item_onhand_qty`) VALUES (3, 'file', 15);
 INSERT INTO `new_schema`.`items` (`item_id`, `item_desc`, `item_onhand_qty`) VALUES (4, 'geometry box', 8);
+Update items set item_price=15 where item_id=1
+Update items set item_price=10 where item_id=2
+Update items set item_price=25 where item_id=3
+Update items set item_price=35 where item_id=4
+
 INSERT INTO `new_schema`.`orders` (`order_id`, `order_date`, `order_status`, `user_id`) VALUES ( 1, CURRENT_TIMESTAMP, 1 ,'01');
 INSERT INTO `new_schema`.`order_dtl` (`order_id`, `item_id`, `item_ord_qty`) VALUES (1, 1, 2);
 
