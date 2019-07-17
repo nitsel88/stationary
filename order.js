@@ -12,6 +12,17 @@ router.get('/getMaxOrderId', function (req, res) {
     })
 })
 
+
+router.post('/', function (req, res) {
+
+    dbObj.createOrder().then(results => {
+       res.json(JSON.parse(results));
+    }).catch(err => {
+        errtxt = {errMsg: "error in createOrder"}
+        res.json(errtxt);
+    })
+})
+
 // define the item middleware
 router.get('/user/:userId', function (req, res) {
     userId = req.params.userId
