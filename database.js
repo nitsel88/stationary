@@ -102,7 +102,7 @@ function getMaxOrdId() {
  })
 }
 
-//Get the user for a matching Username and pwd
+//create order
 function createOrder(ord) {
 
  getMaxOrdId.then(maxOrderId => { 
