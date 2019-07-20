@@ -97,43 +97,52 @@ function getMaxOrdId() {
      if (error)  {
          return reject(error);
      }
-     return resolve(JSON.stringify(results));
+     return resolve(results);
     })
  })
-}
+}   
 
 //create order
 function createOrder(ord) {
-
- getMaxOrdId.then(maxOrderId => { 
-     
+//Get the maximum order id from table
     return new Promise((resolve, reject) => {
-    const dbCon = getDb();
-    ordQuery = `INSERT INTO orders (order_id, order_date, order_status, user_id) VALUES (`  
-    maxOrderId + `,CURRENT_TIMESTAMP, 1 ,"` + ord.user + `" FROM orders`;
-    //looping through order details
-    ordDtls = ord.ordDtls;
-    ordDtlQuery = 'INSERT INTO order_dtl (order_id, item_id, item_ord_qty) VALUES'
-    ordDtls.forEach(ordDtl => {
-     ordDtlQuery += "(" +  + "),"
-    })
     
+    getMaxOrdId().then(maxOrderId => { 
+    const dbCon = getDb();
+    orderId = maxOrderId[0].max_ord_id + 1
+    //query for order 
+    ordQuery = `INSERT INTO orders (order_id, order_date, order_status, user_id, order_total) 
+    VALUES (` +  orderId + `,CURRENT_TIMESTAMP, 1 ,"` + ord.user_id + `",` + ord.order_total + `)` ;
+    //query for order details
+    ordDtlQuery = 'INSERT INTO order_dtl (order_id, item_id, item_ord_qty) VALUES'
+    ord.ordDtls.forEach(ordDtl => {
+     ordDtlQuery += "(" + orderId + ", " + ordDtl.item_id + ", "+  ordDtl.item_qty  + "),"
+    })
+    //remove comma
+    ordDtlQuery = ordDtlQuery.slice(0, -1)
+
       console.log(ordQuery);
       console.log(ordDtlQuery);
     
      dbCon.query(ordQuery, (error, results) => {
          if (error)  {
-             return reject(error);
+             return reject("Error inserting order info");
+             console.log("Error inserting order info");
          }
           dbCon.query(ordDtlQuery, (error, results) => {
-         if (error)  {
-             return reject(error);
-         }
-         return resolve(JSON.stringify(results));
+           if (error)  {
+            return reject("Error inserting order details info");
+            console.log("Error inserting order details info");
+           }
+           orderResult = {order_id: orderId, ret_Code: 0}
+           return resolve(JSON.stringify(orderResult));
        })
       })
-     })
-    });
+    }, () => {
+        return reject("Error getting current maximum order id from orders table");
+    })
+ })
+  
 
 }
 
